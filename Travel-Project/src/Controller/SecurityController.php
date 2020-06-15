@@ -5,19 +5,33 @@ namespace App\Controller;
 use App\Form\ResetPassType;
 use App\Entity\Utilisateur;
 use App\Repository\UtilisateurRepository;
-use http\Client\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-USE App\Controller\UsersAuthenticator;
 
 
 class SecurityController extends Controller
 {
+    /**
+     * @Route(name="api_login", path="/api/login_check",methods={"POST"})
+     * @return JsonResponse|Response
+     */
+    public function api_login(Request $request):JsonResponse
+    {
+        $data=$request->request->all();
+
+        return new JsonResponse([
+            'username' =>$data["username"],
+            'password' => $data["password"],
+        ]);
+    }
+
     /**
      * @Route("/login", name="login")
      */
@@ -33,7 +47,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("afterlogin", name="after_login")
+     * @Route("api/afterlogin", name="after_login")
      */
     public function afterlogin()
     {
